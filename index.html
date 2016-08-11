@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="sjcl.js"></script>
+    </head>
+
+
+    <div style="text-align: center; width: 100vh ; height: 100vh ;background: url('bg.jpg') center / cover;">
+        <div id="content" style="height: auto; width: auto; background-color: red;">
+            <p>insert downloadcode</p>
+            <input id="code" type='text'>
+            <button onclick="checkCode()">submit</button>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        "use strict";
+
+        function checkCode() {
+            var passwd = document.getElementById('code').value.toString();
+
+            var secretContent = '{"iv":"mkmg1DreXuYXb/kgWi3G1w==","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"AIz6XnQRrBw=","ct":"ShAg4bx9E9M9ZQWb5OkroYrSDDR9H2sTDUU9DlqHOCNYwFezZukpGezVoIcHMK0gwQ=="}';
+            var secretHash = [-941222270, 792096689, -1243581078, -191312879, -759134674, -592237402, 1484977698, -12984805];
+
+            var codeHash = sjcl.hash.sha256.hash(passwd);
+            var codeCorrect = true;
+
+            for (var i=0; i < 8; i++) {
+                if (!(secretHash[i]==codeHash[i])) {
+                    codeCorrect = false;
+                }
+            }
+            if ( codeCorrect ) {
+                document.getElementById('content').innerHTML = '<a href="'
+                        + sjcl.decrypt( passwd , secretContent )
+                        +'">DOWNLOAD!</a>'; 
+            } else {
+                alert('code is wrong!');
+            }
+        }
+    </script>
+</html>
